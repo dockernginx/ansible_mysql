@@ -1,0 +1,15 @@
+# Variables para instalar MariaDB y crear un usuario en MySQL
+mariadb_packages:
+  - mariadb-server
+  - mariadb-client
+  - python3-pymysql
+
+
+# Configuración de MySQL
+mysql_root_password: "Linux123"
+mysql_database: "compras"
+mysql_socket: "/var/run/mysqld/mysqld.sock"
+
+# Crear un usuario en MYSQL 
+mysql_user: "pablo"
+mysql_user_password: "Linux123#"

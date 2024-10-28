@@ -1,0 +1,50 @@
+---
+- name: Playbook para Configuración de MYSQL
+  hosts: SGBD
+  become: yes
+  vars_files:
+    - ./mysql_vars.yml
+
+  tasks:
+    #Primera parte instalar los paquetes de MariaDB y paquetes necesarios
+    - name: Actualizar repositorios de paquetes
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Instalar paquetes de MariaDB
+      ansible.builtin.package:
+        name: "{{ mariadb_packages }}"
+        state: present
+
+    - name: Iniciar el servicio de MariaDB
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    #Segunda parte Configurara Contraseña en root y crear base de datos 
+    - name: Configurar la contraseña de root de MySQL
+      ansible.builtin.mysql_user:
+        name: root
+        host: localhost
+        password: "{{ mysql_root_password }}"
+        login_unix_socket: "{{ mysql_socket }}"
+        state: present
+
+    - name: Crear base de datos en MySQL
+      community.mysql.mysql_db:
+        name: "{{ mysql_database }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+  
+    #Tercera parte Crear usuario y agregar permisos a la base de datos creada
+    - name: Crear usuario en MySQL y agregar permisos a la base de datos
+      community.mysql.mysql_user:
+        name: "{{ mysql_user }}"
+        password: "{{ mysql_user_password }}"
+        priv: "{{ mysql_database }}.*:ALL PRIVILEGES"
+        host: localhost
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"

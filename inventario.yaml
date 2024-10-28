@@ -1,0 +1,21 @@
+all: 
+  children:
+    WEB00: 
+      hosts:
+        debian1:
+        debian2:
+    WEB01: 
+      hosts: 
+        rocky1:
+        rocky2:
+    Aplicaciones: 
+      hosts:
+        ubuntu1:
+    SGBD: 
+      hosts:
+        mysql1:
+        mysql2:
+    WEB02:
+      hosts:
+        tomcat1:
+        tomcat2:
